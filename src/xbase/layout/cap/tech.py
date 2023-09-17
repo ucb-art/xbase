@@ -71,6 +71,10 @@ class MIMTech(abc.ABC):
     def mim_config(self) -> Mapping[str, Any]:
         return self._mim_config
 
+    @property
+    def tech_info(self) -> TechInfo:
+        return self._tech_info
+
     # functions getting technology information 
     @abc.abstractmethod
     def get_port_layers(self, mim_type: str) -> Tuple[int, int]:
