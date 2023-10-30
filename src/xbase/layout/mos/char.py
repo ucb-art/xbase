@@ -53,11 +53,12 @@ class MOSCharCore(MOSBase):
             stack='number of transistors in a stack.',
             tr_widths='TrackManager width dictionary.',
             tr_spaces='TrackManager space dictionary.',
+            arr_options='Optional extra array options',
         )
 
     @classmethod
     def get_default_param_values(cls) -> Dict[str, Any]:
-        return dict(stack=1)
+        return dict(stack=1, arr_options=None)
 
     def draw_layout(self):
         mos_type_str: str = self.params['mos_type']
@@ -69,6 +70,7 @@ class MOSCharCore(MOSBase):
         stack: int = self.params['stack']
         tr_widths = self.params['tr_widths']
         tr_spaces = self.params['tr_spaces']
+        arr_options: Optional[Dict[str, Any]] = self.params['arr_options']
 
         mos_type: MOSType = MOSType[mos_type_str]
         if mos_type.is_substrate:
@@ -101,7 +103,7 @@ class MOSCharCore(MOSBase):
         ]
 
         row_specs = [MOSRowSpecs.make_row_specs(table) for table in row_specs_dict]
-        ainfo = MOSArrayPlaceInfo(self.grid, lch, tr_widths, tr_spaces)
+        ainfo = MOSArrayPlaceInfo(self.grid, lch, tr_widths, tr_spaces, arr_options=arr_options)
         pinfo = make_pinfo_compact(ainfo, row_specs, True, True)
 
         self.draw_base(pinfo)
