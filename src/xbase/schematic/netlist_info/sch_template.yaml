@@ -1,0 +1,290 @@
+lib_name: xbase
+cell_name: sch_template
+view_name: schematic
+bbox:
+  - -217
+  - -84
+  - 358
+  - 84
+terminals:
+  IN:
+    obj:
+      - 1
+      - inst:
+          lib_name: basic
+          cell_name: ipin
+          view_name: symbol
+          xform:
+            - -160
+            - 0
+            - R0
+          bbox:
+            - -217
+            - -26
+            - -160
+            - 10
+          connections:
+            {}
+          params:
+            {}
+          is_primitive: true
+        attr:
+          layer: 229
+          purpose: 237
+          net: ""
+          origin:
+            - -190
+            - 0
+          alignment: 7
+          orient: R0
+          font: 5
+          height: 10
+          overbar: false
+          visible: true
+          drafting: true
+          attr_type: 0
+          format: 1
+    stype: 0
+    ttype: 0
+  OUT:
+    obj:
+      - 1
+      - inst:
+          lib_name: basic
+          cell_name: opin
+          view_name: symbol
+          xform:
+            - -120
+            - 0
+            - R0
+          bbox:
+            - -120
+            - -26
+            - -63
+            - 10
+          connections:
+            {}
+          params:
+            {}
+          is_primitive: true
+        attr:
+          layer: 229
+          purpose: 237
+          net: ""
+          origin:
+            - -95
+            - 0
+          alignment: 1
+          orient: R0
+          font: 5
+          height: 10
+          overbar: false
+          visible: true
+          drafting: true
+          attr_type: 0
+          format: 1
+    stype: 0
+    ttype: 1
+  VSUP:
+    obj:
+      - 1
+      - inst:
+          lib_name: basic
+          cell_name: iopin
+          view_name: symbolr
+          xform:
+            - 0
+            - 0
+            - R0
+          bbox:
+            - -61
+            - -26
+            - 10
+            - 10
+          connections:
+            {}
+          params:
+            {}
+          is_primitive: true
+        attr:
+          layer: 229
+          purpose: 237
+          net: ""
+          origin:
+            - -25
+            - 0
+          alignment: 7
+          orient: R0
+          font: 5
+          height: 10
+          overbar: false
+          visible: true
+          drafting: true
+          attr_type: 0
+          format: 1
+    stype: 0
+    ttype: 2
+shapes:
+  -
+    - 5
+    - layer: 228
+      purpose: 4294967295
+      net: s
+      points:
+        -
+          - 220
+          - -80
+        -
+          - 220
+          - -40
+  -
+    - 7
+    - layer: 228
+      purpose: 237
+      net: s
+      origin:
+        - 213
+        - -44
+      alignment: 8
+      orient: R90
+      font: 5
+      height: 10
+      overbar: false
+      visible: true
+      drafting: true
+      text: s
+  -
+    - 5
+    - layer: 228
+      purpose: 4294967295
+      net: d
+      points:
+        -
+          - 220
+          - 40
+        -
+          - 220
+          - 80
+  -
+    - 7
+    - layer: 228
+      purpose: 237
+      net: d
+      origin:
+        - 213
+        - 44
+      alignment: 2
+      orient: R90
+      font: 5
+      height: 10
+      overbar: false
+      visible: true
+      drafting: true
+      text: d
+  -
+    - 5
+    - layer: 228
+      purpose: 4294967295
+      net: b
+      points:
+        -
+          - 240
+          - 0
+        -
+          - 280
+          - 0
+  -
+    - 7
+    - layer: 228
+      purpose: 237
+      net: b
+      origin:
+        - 244
+        - 7
+      alignment: 2
+      orient: R0
+      font: 5
+      height: 10
+      overbar: false
+      visible: true
+      drafting: true
+      text: b
+  -
+    - 5
+    - layer: 228
+      purpose: 4294967295
+      net: g
+      points:
+        -
+          - 120
+          - 0
+        -
+          - 160
+          - 0
+  -
+    - 7
+    - layer: 228
+      purpose: 237
+      net: g
+      origin:
+        - 156
+        - 7
+      alignment: 8
+      orient: R0
+      font: 5
+      height: 10
+      overbar: false
+      visible: true
+      drafting: true
+      text: g
+instances:
+  XINST:
+    lib_name: xbase
+    cell_name: nmos4_analog
+    view_name: symbol
+    xform:
+      - 160
+      - -40
+      - R0
+    bbox:
+      - 89
+      - -44
+      - 358
+      - 61
+    connections:
+      b: b
+      d: d
+      g: g
+      s: s
+    params:
+      {}
+    is_primitive: false
+props:
+  connectivityLastUpdated:
+    - 0
+    - 403
+  instance#:
+    - 0
+    - 1
+  lastSchematicExtraction:
+    - 4
+    - time_val: 1675983619
+  pin#:
+    - 0
+    - 3
+  schGeometryLastUpdated:
+    - 0
+    - 403
+  schGeometryVersion:
+    - 3
+    - sch.ds.gm.1.4
+app_defs:
+  _dbLastSavedCounter:
+    - 0
+    - 403
+  _dbvCvTimeStamp:
+    - 0
+    - 403
+  cdbRevision:
+    - 0
+    - 227612

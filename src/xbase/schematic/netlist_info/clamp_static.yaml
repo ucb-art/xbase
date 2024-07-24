@@ -1,13 +1,13 @@
 lib_name: xbase
-cell_name: esd_diode
+cell_name: clamp_static
 view_name: schematic
 bbox:
-  - -212
-  - -26
-  - 59
-  - 250
+  - -381
+  - 20
+  - -9
+  - 300
 terminals:
-  MINUS:
+  VDD:
     obj:
       - 1
       - inst:
@@ -15,14 +15,14 @@ terminals:
           cell_name: iopin
           view_name: symbolr
           xform:
-            - -140
-            - 0
+            - -320
+            - 150
             - R0
           bbox:
-            - -201
-            - -26
-            - -130
-            - 10
+            - -381
+            - 124
+            - -310
+            - 160
           connections:
             {}
           params:
@@ -33,8 +33,8 @@ terminals:
           purpose: 237
           net: ""
           origin:
-            - -165
-            - 0
+            - -345
+            - 150
           alignment: 7
           orient: R0
           font: 5
@@ -44,9 +44,9 @@ terminals:
           drafting: true
           attr_type: 0
           format: 1
-    stype: 0
+    stype: 1
     ttype: 2
-  PLUS:
+  VSS:
     obj:
       - 1
       - inst:
@@ -54,14 +54,14 @@ terminals:
           cell_name: iopin
           view_name: symbolr
           xform:
-            - -140
-            - 240
+            - -320
+            - 110
             - R0
           bbox:
-            - -201
-            - 214
-            - -130
-            - 250
+            - -381
+            - 84
+            - -310
+            - 120
           connections:
             {}
           params:
@@ -72,8 +72,8 @@ terminals:
           purpose: 237
           net: ""
           origin:
-            - -165
-            - 240
+            - -345
+            - 110
           alignment: 7
           orient: R0
           font: 5
@@ -83,29 +83,29 @@ terminals:
           drafting: true
           attr_type: 0
           format: 1
-    stype: 0
+    stype: 2
     ttype: 2
 shapes:
   -
     - 5
     - layer: 228
       purpose: 4294967295
-      net: PLUS
+      net: VDD
       points:
         -
-          - -40
-          - 160
+          - -120
+          - 260
         -
-          - -40
-          - 200
+          - -120
+          - 300
   -
     - 7
     - layer: 228
       purpose: 237
-      net: PLUS
+      net: VDD
       origin:
-        - -47
-        - 164
+        - -127
+        - 264
       alignment: 2
       orient: R90
       font: 5
@@ -113,27 +113,27 @@ shapes:
       overbar: false
       visible: true
       drafting: true
-      text: PLUS
+      text: VDD
   -
     - 5
     - layer: 228
       purpose: 4294967295
-      net: MINUS
+      net: VSS
       points:
         -
-          - -40
-          - 60
+          - -120
+          - 20
         -
-          - -40
-          - 100
+          - -120
+          - 60
   -
     - 7
     - layer: 228
       purpose: 237
-      net: MINUS
+      net: VSS
       origin:
-        - -47
-        - 96
+        - -127
+        - 56
       alignment: 8
       orient: R90
       font: 5
@@ -141,48 +141,49 @@ shapes:
       overbar: false
       visible: true
       drafting: true
-      text: MINUS
+      text: VSS
 instances:
-  XD:
+  XCLP:
     lib_name: BAG_prim
-    cell_name: ndio_standard
+    cell_name: clamp
     view_name: symbol
     xform:
-      - -40
-      - 160
+      - -200
+      - 60
       - R0
     bbox:
-      - -157
-      - 87
-      - 59
-      - 175
+      - -221
+      - 47
+      - -9
+      - 280
     connections:
-      MINUS: MINUS
-      PLUS: PLUS
+      VDD: VDD
+      VSS: VSS
     params:
-      l:
-        - 3
-        - 4
-      w:
-        - 3
-        - 2
+      {}
     is_primitive: true
 props:
   connectivityLastUpdated:
     - 0
-    - 380
+    - 513
+  instance#:
+    - 0
+    - 2
+  instancesLastChanged:
+    - 4
+    - time_val: 1686073096
   lastSchematicExtraction:
     - 4
-    - time_val: 1570653458
+    - time_val: 1686073802
   net#:
     - 0
     - 0
   pin#:
     - 0
-    - 2
+    - 3
   schGeometryLastUpdated:
     - 0
-    - 380
+    - 513
   schGeometryVersion:
     - 3
     - sch.ds.gm.1.4
@@ -192,10 +193,10 @@ props:
 app_defs:
   _dbLastSavedCounter:
     - 0
-    - 380
+    - 513
   _dbvCvTimeStamp:
     - 0
-    - 380
+    - 513
   cdbRevision:
     - 0
     - 227612

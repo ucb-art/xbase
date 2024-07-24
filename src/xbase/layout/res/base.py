@@ -313,7 +313,7 @@ class ResArrayBase(ArrayBase, abc.ABC):
 
         # Add pins
         sup_name = 'VDD' if cast(ResBasePlaceInfo, self.place_info).res_config['sub_type_default'] == 'ntap' else 'VSS'
-        self.add_pin(sup_name, [bot_xm, top_xm])
+        self.add_pin(sup_name, [bot_xm, top_xm], connect=True)
         return bot_xm, top_xm
 
     def connect_hm_vm(self, sig_type: str = 'sig') -> Tuple[Mapping[int, Mapping[ResTermType, np.ndarray]],

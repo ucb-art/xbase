@@ -10,11 +10,11 @@ from bag.util.immutable import Param
 from pybag.core import BBox
 from pybag.enum import Orient2D, Direction, RoundMode, MinLenMode
 
-from ...schematic.esd_static import xbase__esd_static
+from ...schematic.clamp_static import xbase__clamp_static
 
 
-class ESDStatic(TemplateBase):
-    """This class instantiates a static ESD layout as a BlackBoxTemplate and then brings up pins on routing grid."""
+class ClampStatic(TemplateBase):
+    """This class instantiates a static clamp layout as a BlackBoxTemplate and then brings up pins on routing grid."""
     def __init__(self, temp_db: TemplateDB, params: Param, **kwargs: Any) -> None:
         TemplateBase.__init__(self, temp_db, params, **kwargs)
         tr_widths: WDictType = self.params['tr_widths']
@@ -37,7 +37,7 @@ class ESDStatic(TemplateBase):
 
     @classmethod
     def get_schematic_class(cls) -> Optional[Type[Module]]:
-        return xbase__esd_static
+        return xbase__clamp_static
 
     @classmethod
     def get_params_info(cls) -> Mapping[str, str]:
@@ -49,7 +49,7 @@ class ESDStatic(TemplateBase):
             top_layer='Optional way to specify pin layer.\
                        Defaults to value in tech_params.'
         )
-
+    
     @classmethod
     def get_default_param_values(cls) -> Mapping[str, Any]:
         return dict(top_layer=None)
@@ -60,19 +60,21 @@ class ESDStatic(TemplateBase):
         tr_manager = self._tr_manager
 
         # --- Placement --- #
-        esd_info = self.grid.tech_info.tech_params['esd']
-        top_layer = self.params.get('top_layer')
-        if not top_layer:
-            top_layer = esd_info['top_layer']
+        clamp_info = self.grid.tech_info.tech_params['clamp']
+        _top_layer = self.params.get('top_layer')
+        if not _top_layer:
+            _top_layer = clamp_info['top_layer']
+        top_layer = _top_layer
         self._top_layer = top_layer
-        if self.grid.get_direction(top_layer) is Orient2D.y:
-            self._conn_layer = port_layer = top_layer
-        else:
-            self._conn_layer = port_layer = top_layer - 1
-        used_port_layer: int = esd_info['used_port_layer']
+        # if self.grid.get_direction(top_layer) is Orient2D.y:
+        #     self._conn_layer = port_layer = top_layer
+        # else:
+        #     self._conn_layer = port_layer = top_layer - 1
+        self._conn_layer = port_layer = top_layer
+        used_port_layer: int = clamp_info['used_port_layer']
         assert used_port_layer < port_layer, f'top_layer={top_layer} must be greater than ' \
                                              f'used_port_layer={used_port_layer}'
-        config: Mapping[str, Any] = esd_info['types'][cell_name]
+        config: Mapping[str, Any] = clamp_info['types'][cell_name]
         static_lib: str = config['lib_name']
         static_cell: str = config['cell_name']
         size: Tuple[int, int] = config['size']
@@ -88,7 +90,7 @@ class ESDStatic(TemplateBase):
         self.set_size_from_bound_box(port_layer, bbox, round_up=True)
 
         # add rectangle arrays, if any
-        rect_arr_list: Sequence[Mapping[str, Any]] = esd_info['rect_arr_list']
+        rect_arr_list: Sequence[Mapping[str, Any]] = clamp_info['rect_arr_list']
         for rect_arr in rect_arr_list:
             edge_margin: Mapping[str, int] = rect_arr.get('edge_margin', {})
             rect_xl = bbox.xl + edge_margin.get('xl', 0)
@@ -116,101 +118,80 @@ class ESDStatic(TemplateBase):
         # First route to (used_port_layer + 1) on RoutingGrid
         tr_layer = used_port_layer + 1
         # using hm for lower layer and vm for higher layer just for convenience.
-        plus_hm: Sequence[BBox] = inst.get_all_port_pins('plus', used_port_layer)
-        minus_hm: Sequence[BBox] = inst.get_all_port_pins('minus', used_port_layer)
-        if cell_name == 'esd_vss':
-            sup_name = 'VDD'
-            sup_idx = 0
-            minus_idx = 1
-            plus_idx = 2
-        elif cell_name == 'esd_vdd':
-            sup_name = 'VSS'
-            sup_idx = 2
-            minus_idx = 0
-            plus_idx = 1
-        else:
-            raise ValueError(f'Unknown cell_name={cell_name}. Use "esd_vdd" or "esd_vss".')
-        sup_hm: Sequence[BBox] = inst.get_all_port_pins(sup_name, used_port_layer)
+        
+        vdd_idx = 0
+        vss_idx = 1
+        num_sig = 2
+
+        vdd_hm: Sequence[BBox] = inst.get_all_port_pins('VDD', used_port_layer)
+        vss_hm: Sequence[BBox] = inst.get_all_port_pins('VSS', used_port_layer)
         hm_lp = self.grid.tech_info.get_lay_purp_list(used_port_layer)[0]
+
+        # Get extension to keep tracks + vias within the pins
+        w_sup_vm = tr_manager.get_width(tr_layer, 'sup')
+        bound_l, bound_h = self.grid.get_wire_bounds(tr_layer, 0, w_sup_vm)
+        ext = (bound_h - bound_l) // 2
 
         # put pins on (used_port_layer + 1) on RoutingGrid
         if self.grid.get_direction(used_port_layer) is Orient2D.y:
-            hm_lower = max([bbox.yl for bbox in chain(plus_hm, minus_hm, sup_hm)])
-            hm_upper = min([bbox.yh for bbox in chain(plus_hm, minus_hm, sup_hm)])
+            hm_lower = max([bbox.yl for bbox in chain(vss_hm, vdd_hm)])
+            hm_upper = min([bbox.yh for bbox in chain(vss_hm, vdd_hm)])
+
+            hm_lower += ext
+            hm_upper -= ext
         else:  # Orient2D.x
-            hm_lower = max([bbox.xl for bbox in chain(plus_hm, minus_hm, sup_hm)])
-            hm_upper = min([bbox.xh for bbox in chain(plus_hm, minus_hm, sup_hm)])
+            hm_lower = max([bbox.xl for bbox in chain(vss_hm, vdd_hm)])
+            hm_upper = min([bbox.xh for bbox in chain(vss_hm, vdd_hm)])
+
+            hm_lower += ext
+            hm_upper -= ext
+
         vm_l_idx = self.grid.coord_to_track(tr_layer, hm_lower, RoundMode.GREATER_EQ)
         vm_r_idx = self.grid.coord_to_track(tr_layer, hm_upper, RoundMode.LESS_EQ)
         vm_num = tr_manager.get_num_wires_between(tr_layer, 'sup', vm_l_idx, 'sup', vm_r_idx, 'sup') + 2
-        if vm_num < 3:
+        if vm_num < num_sig:
             raise ValueError(f'Redo routing on layer={tr_layer}')
-        _n = vm_num // 3
-        vm_idx_list = tr_manager.spread_wires(tr_layer, ['sup', 'sup', 'sup'] * _n, vm_l_idx, vm_r_idx, ('sup', 'sup'))
-        _p = (vm_idx_list[1] - vm_idx_list[0]) * 3
-        w_sup_vm = tr_manager.get_width(tr_layer, 'sup')
-
-        sup_vm_tid = TrackID(tr_layer, vm_idx_list[sup_idx], w_sup_vm, _n, _p)
-        sup_vm = []
-        for idx, bbox in enumerate(sup_hm):
-            sup_vm.append(self.connect_bbox_to_tracks(Direction.LOWER, hm_lp, bbox, sup_vm_tid,
-                                                      min_len_mode=MinLenMode.MIDDLE))
-
-        plus_vm_tid = TrackID(tr_layer, vm_idx_list[plus_idx], w_sup_vm, _n, _p)
+        _n = vm_num // num_sig
+        vm_idx_list = tr_manager.spread_wires(tr_layer, ['sup'] * num_sig * _n, vm_l_idx, vm_r_idx, ('sup', 'sup'))
+        _p = (vm_idx_list[1] - vm_idx_list[0]) * num_sig
+    
+        plus_vm_tid = TrackID(tr_layer, vm_idx_list[vdd_idx], w_sup_vm, _n, _p)
         plus_vm = []
-        for bbox in plus_hm:
+        for bbox in vdd_hm:
             plus_vm.append(self.connect_bbox_to_tracks(Direction.LOWER, hm_lp, bbox, plus_vm_tid,
                                                        min_len_mode=MinLenMode.MIDDLE))
 
-        minus_vm_tid = TrackID(tr_layer, vm_idx_list[minus_idx], w_sup_vm, _n, _p)
+        minus_vm_tid = TrackID(tr_layer, vm_idx_list[vss_idx], w_sup_vm, _n, _p)
         minus_vm = []
-        for bbox in minus_hm:
+        for bbox in vss_hm:
             minus_vm.append(self.connect_bbox_to_tracks(Direction.LOWER, hm_lp, bbox, minus_vm_tid,
                                                         min_len_mode=MinLenMode.MIDDLE))
 
-        sup_port = self.connect_wires(sup_vm)[0]
         plus_port = self.connect_wires(plus_vm)[0]
         minus_port = self.connect_wires(minus_vm)[0]
 
         # route up to port_layer
         if port_layer > tr_layer:
             for _layer in range(tr_layer + 1, port_layer + 1):
-                _lower = min([warr.lower for warr in [sup_port, plus_port, minus_port]])
-                _upper = max([warr.upper for warr in [sup_port, plus_port, minus_port]])
+                _lower = min([warr.lower for warr in [plus_port, minus_port]])
+                _upper = max([warr.upper for warr in [plus_port, minus_port]])
                 _l_idx = self.grid.coord_to_track(_layer, _lower, RoundMode.GREATER_EQ)
                 _r_idx = self.grid.coord_to_track(_layer, _upper, RoundMode.LESS_EQ)
                 _num = tr_manager.get_num_wires_between(_layer, 'sup', _l_idx, 'sup', _r_idx, 'sup') + 2
-                if _num < 3:
+                if _num < num_sig:
                     raise ValueError(f'Redo routing on layer={_layer}')
-                _n = _num // 3
-                _idx_list = tr_manager.spread_wires(_layer, ['sup', 'sup', 'sup'] * _n, _l_idx, _r_idx, ('sup', 'sup'))
-                _p = (_idx_list[1] - _idx_list[0]) * 3
+                _n = _num // num_sig
+                _idx_list = tr_manager.spread_wires(_layer, ['sup'] * num_sig * _n, _l_idx, _r_idx, ('sup', 'sup'))
+                _p = (_idx_list[1] - _idx_list[0]) * num_sig
                 w_sup = tr_manager.get_width(_layer, 'sup')
 
-                if cell_name == 'esd_vdd':
-                    sup_idx = 2
-                    plus_idx = 1
-                    minus_idx = 0
-                else:   # cell_name == 'esd_vss'
-                    if self.grid.get_direction(_layer) is Orient2D.y:
-                        sup_idx = 0
-                        plus_idx = 2
-                        minus_idx = 1
-                    else:
-                        sup_idx = 2
-                        plus_idx = 0
-                        minus_idx = 1
-
-                sup_tid = TrackID(_layer, _idx_list[sup_idx], w_sup, _n, _p)
-                sup_port = self.connect_to_tracks(sup_port, sup_tid, min_len_mode=MinLenMode.MIDDLE)
-                plus_tid = TrackID(_layer, _idx_list[plus_idx], w_sup, _n, _p)
+                plus_tid = TrackID(_layer, _idx_list[vdd_idx], w_sup, _n, _p)
                 plus_port = self.connect_to_tracks(plus_port, plus_tid, min_len_mode=MinLenMode.MIDDLE)
-                minus_tid = TrackID(_layer, _idx_list[minus_idx], w_sup, _n, _p)
+                minus_tid = TrackID(_layer, _idx_list[vss_idx], w_sup, _n, _p)
                 minus_port = self.connect_to_tracks(minus_port, minus_tid, min_len_mode=MinLenMode.MIDDLE)
 
-        self.add_pin(sup_name, sup_port)
-        self.add_pin('plus', plus_port)
-        self.add_pin('minus', minus_port)
+        self.add_pin('VDD', plus_port, connect=True)
+        self.add_pin('VSS', minus_port, connect=True)
 
         # add hidden pins on unconnected used_port_layer wires for collision checking in top level cells
         nc_hm: Sequence[BBox] = inst.get_all_port_pins('NC', used_port_layer)

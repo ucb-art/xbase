@@ -1,36 +1,49 @@
 lib_name: xbase
-cell_name: metal_short
+cell_name: sch_template
 view_name: symbol
 bbox:
-  - -8
   - -4
-  - 198
-  - 184
+  - -80
+  - 348
+  - 60
 terminals:
-  MINUS:
+  IN:
     obj:
       - 0
       - layer: 229
         purpose: 4294967295
         net: ""
         bbox:
-          - 36
           - -4
-          - 44
+          - 16
           - 4
+          - 24
     stype: 0
-    ttype: 2
-  PLUS:
+    ttype: 0
+  OUT:
     obj:
       - 0
       - layer: 229
         purpose: 4294967295
         net: ""
         bbox:
-          - 36
-          - 176
-          - 44
-          - 184
+          - 256
+          - 16
+          - 264
+          - 24
+    stype: 0
+    ttype: 1
+  VSUP:
+    obj:
+      - 0
+      - layer: 229
+        purpose: 4294967295
+        net: ""
+        bbox:
+          - 126
+          - -64
+          - 134
+          - -56
     stype: 0
     ttype: 2
 shapes:
@@ -41,27 +54,27 @@ shapes:
       net: ""
       points:
         -
-          - 40
-          - 180
+          - 0
+          - 0
         -
           - 40
-          - 40
+          - 0
   -
     - 7
     - layer: 229
       purpose: 237
       net: ""
       origin:
+        - 6
         - 30
-        - 174
       alignment: 1
-      orient: R270
+      orient: R0
       font: 5
       height: 10
       overbar: false
       visible: true
       drafting: true
-      text: PLUS
+      text: IN
   -
     - 5
     - layer: 231
@@ -69,46 +82,74 @@ shapes:
       net: ""
       points:
         -
-          - 40
+          - 260
           - 0
         -
-          - 40
-          - 40
+          - 220
+          - 0
   -
     - 7
     - layer: 229
       purpose: 237
       net: ""
       origin:
+        - 254
         - 30
-        - 6
       alignment: 7
-      orient: R270
+      orient: R0
       font: 5
       height: 10
       overbar: false
       visible: true
       drafting: true
-      text: MINUS
+      text: OUT
+  -
+    - 5
+    - layer: 231
+      purpose: 4294967295
+      net: ""
+      points:
+        -
+          - 130
+          - -40
+        -
+          - 130
+          - -80
+  -
+    - 7
+    - layer: 229
+      purpose: 237
+      net: ""
+      origin:
+        - 124
+        - -50
+      alignment: 1
+      orient: R180
+      font: 5
+      height: 10
+      overbar: false
+      visible: true
+      drafting: true
+      text: VSUP
   -
     - 0
     - layer: 236
       purpose: 4294967295
       net: ""
       bbox:
-        - 0
-        - 0
-        - 80
-        - 180
+        - 20
+        - -60
+        - 240
+        - 60
   -
     - 8
     - layer: 236
       purpose: 237
       net: ""
       origin:
-        - 70
-        - 120
-      alignment: 2
+        - 220
+        - 40
+      alignment: 1
       orient: R0
       font: 5
       height: 10
@@ -123,8 +164,8 @@ shapes:
       purpose: 237
       net: ""
       origin:
-        - 40
-        - 90
+        - 130
+        - 0
       alignment: 4
       orient: R0
       font: 5
@@ -132,7 +173,7 @@ shapes:
       overbar: false
       visible: true
       drafting: true
-      text: "[@partName]"
+      text: "[@cellName]"
       evaluator: cdsNLPEvalText
   -
     - 0
@@ -140,39 +181,36 @@ shapes:
       purpose: 4294967295
       net: ""
       bbox:
-        - 0
-        - 60
-        - 80
-        - 120
+        - 40
+        - -40
+        - 220
+        - 40
 instances:
   {}
 props:
-  instNamePrefix:
-    - 3
-    - X
   interfaceLastChanged:
     - 4
-    - time_val: 1570653354
+    - time_val: 1675983593
   partName:
     - 3
-    - metal_short
+    - sch_template
   pin#:
     - 0
-    - 2
+    - 3
   portOrder:
     - 5
     - name: ILList
-      bin_val: ("MINUS" "PLUS")
+      bin_val: ("OUT" "VSUP" "IN")
   vendorName:
     - 3
     - ""
 app_defs:
   _dbLastSavedCounter:
     - 0
-    - 85
+    - 132
   _dbvCvTimeStamp:
     - 0
-    - 85
+    - 132
   cdbRevision:
     - 0
     - 227612
