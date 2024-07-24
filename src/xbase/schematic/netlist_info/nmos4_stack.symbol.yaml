@@ -7,6 +7,19 @@ bbox:
   - 318
   - 221
 terminals:
+  g<1:0>:
+    obj:
+      - 0
+      - layer: 229
+        purpose: 4294967295
+        net: ""
+        bbox:
+          - -4
+          - 96
+          - 4
+          - 104
+    stype: 0
+    ttype: 2
   b:
     obj:
       - 0
@@ -31,19 +44,6 @@ terminals:
           - 196
           - 124
           - 204
-    stype: 0
-    ttype: 2
-  g<1:0>:
-    obj:
-      - 0
-      - layer: 229
-        purpose: 4294967295
-        net: ""
-        bbox:
-          - -4
-          - 96
-          - 4
-          - 104
     stype: 0
     ttype: 2
   s:
@@ -907,25 +907,25 @@ shapes:
 instances:
   {}
 props:
+  pin#:
+    - 0
+    - 5
   instNamePrefix:
     - 3
     - X
   interfaceLastChanged:
     - 4
     - time_val: 1567232578
+  vendorName:
+    - 3
+    - ""
   partName:
     - 3
     - nmos4_stack
-  pin#:
-    - 0
-    - 5
   portOrder:
     - 5
     - name: ILList
       bin_val: ("b" "d" "g<1:0>" "s")
-  vendorName:
-    - 3
-    - ""
 app_defs:
   _dbLastSavedCounter:
     - 0
@@ -936,6 +936,3 @@ app_defs:
   cdbRevision:
     - 0
     - 227612
-  cdnSPDesignMajorVersion:
-    - 0
-    - 2

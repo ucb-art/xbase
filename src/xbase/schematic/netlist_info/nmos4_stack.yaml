@@ -7,45 +7,6 @@ bbox:
   - 52
   - 250
 terminals:
-  b:
-    obj:
-      - 1
-      - inst:
-          lib_name: basic
-          cell_name: iopin
-          view_name: symbolr
-          xform:
-            - -200
-            - 140
-            - R0
-          bbox:
-            - -261
-            - 114
-            - -190
-            - 150
-          connections:
-            {}
-          params:
-            {}
-          is_primitive: true
-        attr:
-          layer: 229
-          purpose: 237
-          net: ""
-          origin:
-            - -225
-            - 140
-          alignment: 7
-          orient: R0
-          font: 5
-          height: 10
-          overbar: false
-          visible: true
-          drafting: true
-          attr_type: 0
-          format: 1
-    stype: 0
-    ttype: 2
   d:
     obj:
       - 1
@@ -152,6 +113,45 @@ terminals:
           origin:
             - -225
             - 170
+          alignment: 7
+          orient: R0
+          font: 5
+          height: 10
+          overbar: false
+          visible: true
+          drafting: true
+          attr_type: 0
+          format: 1
+    stype: 0
+    ttype: 2
+  b:
+    obj:
+      - 1
+      - inst:
+          lib_name: basic
+          cell_name: iopin
+          view_name: symbolr
+          xform:
+            - -200
+            - 140
+            - R0
+          bbox:
+            - -261
+            - 114
+            - -190
+            - 150
+          connections:
+            {}
+          params:
+            {}
+          is_primitive: true
+        attr:
+          layer: 229
+          purpose: 237
+          net: ""
+          origin:
+            - -225
+            - 140
           alignment: 7
           orient: R0
           font: 5
@@ -286,51 +286,51 @@ instances:
       - 180
       - R0
     bbox:
-      - -148
+      - -150
       - 146
       - 52
       - 225
     connections:
-      B: b
-      D: d
-      G: g<0>
       S: s
+      D: d
+      B: b
+      G: g<0>
     params:
-      l:
-        - 3
-        - 10n
       nf:
         - 3
         - 1
       w:
         - 3
         - 4
+      l:
+        - 3
+        - 10n
     is_primitive: true
 props:
-  connectivityLastUpdated:
-    - 0
-    - 2379
-  instance#:
-    - 0
-    - 2
-  lastSchematicExtraction:
-    - 4
-    - time_val: 1567233126
-  net#:
-    - 0
-    - 0
   pin#:
     - 0
     - 4
+  instance#:
+    - 0
+    - 2
   schGeometryLastUpdated:
     - 0
     - 2379
   schGeometryVersion:
     - 3
     - sch.ds.gm.1.4
+  lastSchematicExtraction:
+    - 4
+    - time_val: 1567233126
+  connectivityLastUpdated:
+    - 0
+    - 2379
   schXtrVersion:
     - 3
     - sch.10.0
+  net#:
+    - 0
+    - 0
 app_defs:
   _dbLastSavedCounter:
     - 0
@@ -341,6 +341,3 @@ app_defs:
   cdbRevision:
     - 0
     - 227612
-  cdnSPDesignMajorVersion:
-    - 0
-    - 2

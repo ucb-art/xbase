@@ -56,7 +56,12 @@ class ResChar(ResArrayBase):
     def get_params_info(cls) -> Mapping[str, str]:
         return dict(
             pinfo='The ResBasePlaceInfo object.',
+            snake_conn='True to have snaking series connection; False by default',
         )
+
+    @classmethod
+    def get_default_param_values(cls) -> Mapping[str, Any]:
+        return dict(snake_conn=False)
 
     def draw_layout(self) -> None:
         pinfo = cast(ResBasePlaceInfo, ResBasePlaceInfo.make_place_info(self.grid, self.params['pinfo']))
@@ -69,7 +74,15 @@ class ResChar(ResArrayBase):
         self.connect_bulk_xm(bulk_warrs)
 
         # --- Routing of unit resistors --- #
-        minus, plus = self.connect_units(warrs, 0, pinfo.nx, 0, pinfo.ny)
+        snake_conn: bool = self.params['snake_conn']
+        if snake_conn:
+            minus, plus = self.snake_connect_units(warrs, 0, pinfo.nx, 0, pinfo.ny)
+            nser = pinfo.ny * pinfo.nx
+            npar = 1
+        else:
+            minus, plus = self.connect_units(warrs, 0, pinfo.nx, 0, pinfo.ny)
+            nser = pinfo.ny
+            npar = pinfo.nx
 
         hm_layer = self.conn_layer + 1
         vm_layer = hm_layer + 1
@@ -86,7 +99,7 @@ class ResChar(ResArrayBase):
                 l=pinfo.l_res,
                 intent=pinfo.res_type,
             ),
-            nser=pinfo.ny,
-            npar=pinfo.nx,
+            nser=nser,
+            npar=npar,
             sub_type=pinfo.res_config['sub_type_default'],
         )

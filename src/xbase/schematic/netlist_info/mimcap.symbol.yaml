@@ -7,20 +7,7 @@ bbox:
   - 184
   - 120
 terminals:
-  bot:
-    obj:
-      - 0
-      - layer: 229
-        purpose: 4294967295
-        net: ""
-        bbox:
-          - 176
-          - 56
-          - 184
-          - 64
-    stype: 0
-    ttype: 2
-  top:
+  TOP:
     obj:
       - 0
       - layer: 229
@@ -30,6 +17,19 @@ terminals:
           - -4
           - 56
           - 4
+          - 64
+    stype: 0
+    ttype: 2
+  BOT:
+    obj:
+      - 0
+      - layer: 229
+        purpose: 4294967295
+        net: ""
+        bbox:
+          - 176
+          - 56
+          - 184
           - 64
     stype: 0
     ttype: 2
@@ -49,7 +49,7 @@ shapes:
       overbar: false
       visible: true
       drafting: true
-      text: top
+      text: TOP
   -
     - 7
     - layer: 229
@@ -65,7 +65,7 @@ shapes:
       overbar: false
       visible: true
       drafting: true
-      text: bot
+      text: BOT
   -
     - 0
     - layer: 236
@@ -171,29 +171,29 @@ shapes:
 instances:
   {}
 props:
-  interfaceLastChanged:
-    - 4
-    - time_val: 1663895136
-  partName:
-    - 3
-    - mimcap
   pin#:
     - 0
     - 2
-  portOrder:
-    - 5
-    - name: ILList
-      bin_val: ("bot" "top")
+  interfaceLastChanged:
+    - 4
+    - time_val: 1694923891
   vendorName:
     - 3
     - ""
+  partName:
+    - 3
+    - mimcap
+  portOrder:
+    - 5
+    - name: ILList
+      bin_val: ("BOT" "TOP")
 app_defs:
   _dbLastSavedCounter:
     - 0
-    - 116
+    - 153
   _dbvCvTimeStamp:
     - 0
-    - 116
+    - 153
   cdbRevision:
     - 0
     - 227612
