@@ -115,6 +115,24 @@ class ArrayTech(abc.ABC):
                         tr_manager: TrackManager, wire_specs: Mapping[int, Any], mode: ExtendMode,
                         max_ext: int = 1000, **kwargs: Any
                         ) -> Tuple[int, int, Dict[int, WireLookup], ArrayLayInfo]:
+        """Determine the size of the ArrayUnit for constructing ArrayPlaceInfo.
+        A block can be sized in three ways:
+        (1) Binary search for the minimum area, based on the tech implementation of `get_blk_info`
+        (2) Wire specs, if given, can set a lower bound
+        (3) Manual lower bounds can be set with kwargs `min_width` and `min_height`
+        Based on these three, the smallest area is determined.
+
+        Returns
+        -------
+        w : int
+            Unit width
+        h : int
+            Unit height
+        wlookup : Mapping[int, WireLookup]
+            Wire lookup table based on wire specs
+        blk_info : ArrayLayInfo
+            Unit array info
+        """
         wire_specs = WireSpecs.make_wire_specs(conn_layer, top_layer, tr_manager, wire_specs,
                                                min_size=self.min_size, blk_pitch=self.blk_pitch,
                                                align_default=Alignment.CENTER_COMPACT)
@@ -122,6 +140,9 @@ class ArrayTech(abc.ABC):
         blk_info: Optional[ArrayLayInfo] = None
         w_min, h_min = wire_specs.min_size
         blk_w, blk_h = wire_specs.blk_size
+        # Kwarg bypass
+        w_min = max(w_min, kwargs.get("min_width", 0))
+        h_min = max(h_min, kwargs.get("min_height", 0))
         w = w_min
         h = h_min
         opt_area = COORD_MAX ** 2
