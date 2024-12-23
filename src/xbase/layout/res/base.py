@@ -375,11 +375,21 @@ class ResArrayBase(ArrayBase, abc.ABC):
                 bot = 'MINUS'
 
             bbox_bot = self.get_device_port(0, yidx, bot)
+            # Method 1: closest to existing pin
             hm_idx0 = self.grid.coord_to_track(hm_layer, bbox_bot.yl, RoundMode.NEAREST)
+            # Method 2: sufficient spacing to supply connection
+            _alt_ref = self.grid.coord_to_track(hm_layer, unit_h * yidx, RoundMode.NEAREST)
+            _alt_tidx = self.tr_manager.get_next_track(hm_layer, _alt_ref, 'sup', sig_type)
+            hm_idx0 = max(hm_idx0, _alt_tidx)
             hm_tid0 = TrackID(hm_layer, hm_idx0, w_sig_hm)
 
             bbox_top = self.get_device_port(0, yidx, top)
+            # Method 1: closest to existing pin
             hm_idx1 = self.grid.coord_to_track(hm_layer, bbox_top.yh, RoundMode.NEAREST)
+            # Method 2: sufficient spacing to supply connection
+            _alt_ref = self.grid.coord_to_track(hm_layer, unit_h * (yidx + 1), RoundMode.NEAREST)
+            _alt_tidx = self.tr_manager.get_next_track(hm_layer, _alt_ref, 'sup', sig_type, up=-1)
+            hm_idx1 = min(hm_idx1, _alt_tidx)
             hm_tid1 = TrackID(hm_layer, hm_idx1, w_sig_hm)
 
             for xidx in range(nx):
